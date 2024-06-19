@@ -7,3 +7,7 @@ Zotero
 Please post feature requests or bug reports to the [Zotero Forums](https://forums.zotero.org/). If you're having trouble with Zotero, see [Getting Help](https://www.zotero.org/support/getting_help).
 
 For more information on how to use this source code, see the [Zotero documentation](https://www.zotero.org/support/dev/source_code).
+
+
+## Thibo's Changes
+_None, studying the code_
