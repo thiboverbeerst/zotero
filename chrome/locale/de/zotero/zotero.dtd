@@ -144,7 +144,7 @@
 <!ENTITY zotero.tagColorChooser.setColor "Farbe zuweisen">
 <!ENTITY zotero.tagColorChooser.removeColor "Farbe entfernen">
 
-<!ENTITY zotero.lookup.description "Geben Sie ISBNs, DOIs, PMIDs, arXiv IDs oder ADS Bibcodes ein, um diese zu Ihrer Bibliothek hinzuzufügen:">
+<!ENTITY zotero.lookup.description "ISBNs, DOIs, PMIDs, arXiv IDs oder ADS Bibcodes eingeben, um zur Bibliothek hinzuzufügen:">
 <!ENTITY zotero.lookup.button.search "Suche">
 
 <!ENTITY zotero.createParent.title "Übergeordneten Eintrag erstellen">
@@ -318,11 +318,11 @@
 <!ENTITY zotero.pdfReader.noSpreads "Einzelne Seiten">
 <!ENTITY zotero.pdfReader.oddSpreads "Ungerade + gerade Seite">
 <!ENTITY zotero.pdfReader.evenSpreads "Gerade + ungerade Seite">
-<!ENTITY zotero.pdfReader.scrolled "Scrolled">
-<!ENTITY zotero.pdfReader.paginated "Paginated">
+<!ENTITY zotero.pdfReader.scrolled "Fließend">
+<!ENTITY zotero.pdfReader.paginated "Seitenweise">
 <!ENTITY zotero.pdfReader.zoomIn "Vergrößern">
 <!ENTITY zotero.pdfReader.zoomOut "Verkleinern">
-<!ENTITY zotero.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY zotero.pdfReader.zoomReset "Zoom zurücksetzen">
 <!ENTITY zotero.pdfReader.zoomAuto "Automatisch Größe anpassen">
 <!ENTITY zotero.pdfReader.zoomPageWidth "Auf Fensterbreite skalieren">
 <!ENTITY zotero.pdfReader.zoomPageHeight "Auf Fensterhöhe skalieren">

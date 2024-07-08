@@ -23,14 +23,29 @@
   "general_warning": {
     "message": "Figyelmeztetés"
   },
+  "general_ok": {
+    "message": "OK"
+  },
   "general_cancel": {
     "message": "Mégse"
+  },
+  "general_selectAll": {
+    "message": "Mindet kijelöli"
+  },
+  "general_deselectAll": {
+    "message": "Összes címke kiválasztásának megszüntetése"
   },
   "general_pleaseWait": {
     "message": "Kérem várjon…"
   },
   "general_copyToClipboard": {
     "message": "Másolás a vágólapra"
+  },
+  "itemType_note": {
+    "message": "Jegyzet"
+  },
+  "itemType_attachment": {
+    "message": "Csatolmány"
   },
   "progressWindow_savingTo": {
     "message": "Mentés"
@@ -121,6 +136,9 @@
   },
   "integration_googleDocs_orphanedCitations_alertButton": {
     "message": "Hivatkozás újralinkelése"
+  },
+  "integration_googleDocs_orphanedCitations_disclaimer": {
+    "message": "Ezek az idézetek már nem <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">kapcsolódnak $1 </a>. Újra kell kapcsolnia őket, mielőtt frissülnének vagy megjelennének az irodalomjegyzékben."
   },
   "general_saveTo": {
     "message": "Mentés $1-ba(n)"

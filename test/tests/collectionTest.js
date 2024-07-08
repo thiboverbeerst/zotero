@@ -94,7 +94,8 @@ describe("Zotero.Collection", function() {
 
 		it("should restore deleted collection", async function () {
 			var collection1 = await createDataObject('collection');
-			var item1 = await createDataObject('item', { collections: [collection1.id] });
+			var collection2 = await createDataObject('collection');
+			var item1 = await createDataObject('item', { collections: [collection1.id, collection2.id] });
 
 			assert.include(item1.getCollections(), collection1.id);
 
@@ -127,6 +128,26 @@ describe("Zotero.Collection", function() {
 			assert.equal(await Zotero.Collections.getAsync(collection1.id), false);
 			assert.equal(await Zotero.Collections.getAsync(collection2.id), false);
 			assert.equal(await Zotero.Collections.getAsync(collection3.id), false);
+		});
+
+		it("should not load deleted collections into item's cache on startup", async function () {
+			var collection1 = await createDataObject('collection');
+			var collection2 = await createDataObject('collection');
+			var item = await createDataObject('item', { collections: [collection1.id, collection2.id] });
+
+			collection1.deleted = true;
+			await collection1.saveTx();
+
+			// Make sure the deleted collection is gone from item's cache
+			assert.notInclude(item.getCollections(), collection1.id);
+			assert.include(item.getCollections(), collection2.id);
+
+			// Reload the item's data from DB
+			await Zotero.Items.get(item.id).reload(null, true);
+
+			// Make sure the deleted collection is not back in item's cache
+			assert.notInclude(item.getCollections(), collection1.id);
+			assert.include(item.getCollections(), collection2.id);
 		});
 	})
 	
@@ -284,6 +305,22 @@ describe("Zotero.Collection", function() {
 			var childCollections = collection1.getChildCollections();
 			assert.lengthOf(childCollections, 0);
 		})
+		
+		it("should not include collections in trash by default", async function () {
+			var collection1 = await createDataObject('collection');
+			var collection2 = await createDataObject('collection', { parentID: collection1.id, deleted: true });
+			
+			var childCollections = collection1.getChildCollections();
+			assert.lengthOf(childCollections, 0);
+		});
+		
+		it("should include collections in trash if includeTrashed=true", async function () {
+			var collection1 = await createDataObject('collection');
+			var collection2 = await createDataObject('collection', { parentID: collection1.id, deleted: true });
+			
+			var childCollections = collection1.getChildCollections(false, true);
+			assert.lengthOf(childCollections, 1);
+		});
 		
 		it("should not include collections that have been deleted", function* () {
 			var collection1 = yield createDataObject('collection');

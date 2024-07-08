@@ -43,6 +43,7 @@
 <!ENTITY bidiSwitchTextDirectionItem.commandkey "X">
 
 <!ENTITY goMenu.label "Mene">
+<!ENTITY goMenu.accesskey "G">
 
 <!ENTITY viewMenu.label "Näytä">
 <!ENTITY viewMenu.accesskey "V">
@@ -55,8 +56,8 @@
 <!ENTITY recursiveCollections.label "Näytä alakokoelmien nimikkeet">
 <!ENTITY fontSize.label "Fonttikoko">
 <!ENTITY noteFontSize.label "Muistiinpanojen fonttikoko">
-<!ENTITY columns.label "Columns">
-<!ENTITY sortBy.label "Sort By">
+<!ENTITY columns.label "Sarakkeet">
+<!ENTITY sortBy.label "Lajittele">
 
 <!ENTITY toolsMenu.label "Työkalut">
 <!ENTITY toolsMenu.accesskey "T">

@@ -187,12 +187,12 @@
 		}
 		
 		isPanePinnable(id) {
-			return id !== 'info' && id !== 'context-all-notes' && id !== 'context-item-notes';
+			return id !== 'info' && id !== 'context-notes' && id !== 'context-all-notes' && id !== 'context-item-notes';
 		}
 		
 		init() {
 			this._buttonContainer = this.querySelector('.inherit-flex');
-			for (let toolbarbutton of this.querySelectorAll('toolbarbutton')) {
+			for (let toolbarbutton of this.querySelectorAll('toolbarbutton[data-pane]')) {
 				let pane = toolbarbutton.dataset.pane;
 				
 				let pinnable = this.isPanePinnable(pane);

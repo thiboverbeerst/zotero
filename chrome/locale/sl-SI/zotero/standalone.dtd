@@ -43,6 +43,7 @@
 <!ENTITY bidiSwitchTextDirectionItem.commandkey "b">
 
 <!ENTITY goMenu.label "Pojdi">
+<!ENTITY goMenu.accesskey "G">
 
 <!ENTITY viewMenu.label "Pogled">
 <!ENTITY viewMenu.accesskey "g">
@@ -55,8 +56,8 @@
 <!ENTITY recursiveCollections.label "Pokaži vnose v podzbirkah">
 <!ENTITY fontSize.label "Velikost pisave">
 <!ENTITY noteFontSize.label "Velikost pisave opomb">
-<!ENTITY columns.label "Columns">
-<!ENTITY sortBy.label "Sort By">
+<!ENTITY columns.label "Stolpci">
+<!ENTITY sortBy.label "Razvrsti po">
 
 <!ENTITY toolsMenu.label "Orodja">
 <!ENTITY toolsMenu.accesskey "d">

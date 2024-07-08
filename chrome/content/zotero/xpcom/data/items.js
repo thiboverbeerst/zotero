@@ -503,7 +503,7 @@ Zotero.Items = function() {
 		}
 		catch (e) {
 			if (e.message.includes('no such column: IA.authorName')
-					&& await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM version WHERE schema='userdata' AND version IN (120, 121)")) {
+					&& await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM version WHERE schema='userdata' AND version IN (120, 121, 122)")) {
 				await Zotero.DB.queryAsync("UPDATE version SET version=119 WHERE schema='userdata'");
 				Zotero.crash();
 			}
@@ -797,7 +797,8 @@ Zotero.Items = function() {
 	this._loadCollections = Zotero.Promise.coroutine(function* (libraryID, ids, idSQL) {
 		var sql = "SELECT itemID, collectionID FROM items "
 			+ "LEFT JOIN collectionItems USING (itemID) "
-			+ "WHERE libraryID=?" + idSQL;
+			+ "LEFT JOIN deletedCollections USING (collectionID) "
+			+ "WHERE deletedCollections.collectionID IS NULL AND libraryID=?" + idSQL;
 		var params = [libraryID];
 		
 		var lastItemID;

@@ -394,6 +394,60 @@ describe("Item pane", function () {
 		});
 	});
 
+	describe("Libraries and collections pane", function () {
+		var item, collectionParent, collectionChild, section;
+
+		// Fresh setup of an item belonging to 2 collections - parent and child - for each test
+		beforeEach(async function () {
+			collectionParent = await createDataObject('collection');
+			collectionChild = await createDataObject('collection', { parentID: collectionParent.id });
+			item = await createDataObject('item', { collections: [collectionParent.id, collectionChild.id] });
+			await ZoteroPane.selectItem(item.id);
+			section = ZoteroPane.itemPane._itemDetails.getPane("libraries-collections");
+		});
+		
+		it("should update collection's name after rename", async function () {
+			collectionChild.name = "Updated collection name";
+			collectionChild.saveTx();
+
+			await waitForNotifierEvent('modify', 'collection');
+
+			let collectionRow = section.querySelector(`.row[data-id="C${collectionChild.id}"]`);
+			assert.equal(collectionRow.innerText, collectionChild.name);
+		});
+
+		it("should remove collection that has been trashed", async function () {
+			collectionChild.deleted = true;
+			collectionChild.saveTx();
+
+			await waitForNotifierEvent('trash', 'collection');
+
+			let rowIDs = [...section.querySelectorAll(".row")].map(node => node.dataset.id);
+			assert.deepEqual(rowIDs, [`L${item.libraryID}`, `C${collectionParent.id}`]);
+		});
+
+		it("should bring back collection restored from trash", async function () {
+			collectionChild.deleted = true;
+			collectionChild.saveTx();
+
+			await waitForNotifierEvent('trash', 'collection');
+
+			// Make sure the collection is actually gone
+			let rowIDs = [...section.querySelectorAll(".row")].map(node => node.dataset.id);
+			assert.deepEqual(rowIDs, [`L${item.libraryID}`, `C${collectionParent.id}`]);
+
+			// Restore the collection from trash
+			collectionChild.deleted = false;
+			collectionChild.saveTx();
+
+			await waitForNotifierEvent('modify', 'collection');
+
+			// The collection row should appear again
+			rowIDs = [...section.querySelectorAll(".row")].map(node => node.dataset.id);
+			assert.deepEqual(rowIDs, [`L${item.libraryID}`, `C${collectionParent.id}`, `C${collectionChild.id}`]);
+		});
+	});
+
 	describe("Attachments pane", function () {
 		let paneID = "attachments";
 
@@ -1215,6 +1269,34 @@ describe("Item pane", function () {
 	
 	describe("Feed buttons", function() {
 		describe("Mark as Read/Unread", function() {
+			it("should change an item from unread to read", async function () {
+				var feed = await createFeed();
+				await select(win, feed);
+				
+				var item = await createDataObject('feedItem', { libraryID: feed.libraryID });
+				
+				// Skip timed mark-as-read
+				var stub = sinon.stub(win.ZoteroPane, 'startItemReadTimeout');
+				await select(win, item);
+				
+				// Click "Mark as Read"
+				var promise = waitForItemEvent('modify');
+				var button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				assert.equal(button.label, Zotero.getString('pane.item.markAsRead'));
+				assert.isFalse(item.isRead);
+				button.click();
+				var ids = await promise;
+				
+				assert.sameMembers(ids, [item.id]);
+				assert.isTrue(item.isRead);
+				// Button is re-created
+				button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				assert.equal(button.label, Zotero.getString('pane.item.markAsUnread'));
+				
+				stub.restore();
+			});
+			
+			
 			it("should update label when state of an item changes", function* () {
 				let feed = yield createFeed();
 				yield selectLibrary(win, feed.libraryID);

@@ -202,6 +202,7 @@ class ReaderInstance {
 			showAnnotations: true,
 			useDarkModeForContent: Zotero.Prefs.get('reader.contentDarkMode'),
 			fontFamily: Zotero.Prefs.get('reader.ebookFontFamily'),
+			hyphenation: Zotero.Prefs.get('reader.ebookHyphenate'),
 			onOpenContextMenu: () => {
 				// Functions can only be passed over wrappedJSObject (we call back onClick for context menu items)
 				this._openContextMenu(this._iframeWindow.wrappedJSObject.contextMenuParams);
@@ -520,7 +521,6 @@ class ReaderInstance {
 		}, this._iframeWindow, { cloneFunctions: true }));
 
 		this._resolveInitPromise();
-
 		// Set title once again, because `ReaderWindow` isn't loaded the first time
 		this.updateTitle();
 
@@ -528,7 +528,8 @@ class ReaderInstance {
 			Zotero.Prefs.registerObserver('fontSize', this._handleFontSizeChange),
 			Zotero.Prefs.registerObserver('tabs.title.reader', this._handleTabTitlePrefChange),
 			Zotero.Prefs.registerObserver('reader.contentDarkMode', this._handleContentDarkModeChange),
-			Zotero.Prefs.registerObserver('reader.ebookFontFamily', this._handleFontFamilyChange),
+			Zotero.Prefs.registerObserver('reader.ebookFontFamily', this._handleEbookPrefChange),
+			Zotero.Prefs.registerObserver('reader.ebookHyphenate', this._handleEbookPrefChange),
 		];
 
 		return true;
@@ -859,8 +860,9 @@ class ReaderInstance {
 		this._internalReader.useDarkModeForContent(Zotero.Prefs.get('reader.contentDarkMode'));
 	};
 
-	_handleFontFamilyChange = () => {
+	_handleEbookPrefChange = () => {
 		this._internalReader.setFontFamily(Zotero.Prefs.get('reader.ebookFontFamily'));
+		this._internalReader.setHyphenate(Zotero.Prefs.get('reader.ebookHyphenate'));
 	};
 
 	_dataURLtoBlob(dataurl) {
@@ -1017,19 +1019,28 @@ class ReaderTab extends ReaderInstance {
 		this._onToggleSidebarCallback = options.onToggleSidebar;
 		this._onChangeSidebarWidthCallback = options.onChangeSidebarWidth;
 		this._window = Services.wm.getMostRecentWindow('navigator:browser');
-		let { id, container } = this._window.Zotero_Tabs.add({
-			id: options.tabID,
-			type: 'reader',
-			title: options.title || '',
-			index: options.index,
-			data: {
-				itemID: this._item.id
-			},
-			select: !options.background,
-			preventJumpback: options.preventJumpback
-		});
-		this.tabID = id;
-		this._tabContainer = container;
+		let existingTabID = options.tabID;
+		// If an unloaded tab for this item already exists, load the reader in it.
+		// Otherwise, create a new tab
+		if (existingTabID) {
+			this.tabID = existingTabID;
+			this._tabContainer = this._window.document.getElementById(existingTabID);
+		}
+		else {
+			let { id, container } = this._window.Zotero_Tabs.add({
+				id: options.tabID,
+				type: 'reader',
+				title: options.title || '',
+				index: options.index,
+				data: {
+					itemID: this._item.id
+				},
+				select: !options.background,
+				preventJumpback: options.preventJumpback
+			});
+			this.tabID = id;
+			this._tabContainer = container;
+		}
 		
 		this._iframe = this._window.document.createXULElement('browser');
 		this._iframe.setAttribute('class', 'reader');
@@ -1737,6 +1748,9 @@ class Reader {
 	async open(itemID, location, { title, tabIndex, tabID, openInBackground, openInWindow, allowDuplicate, secondViewState, preventJumpback } = {}) {
 		let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);
 		let library = Zotero.Libraries.get(libraryID);
+		let win = Zotero.getMainWindow();
+		// Change tab's type from "unloaded-reader" to "reader"
+		win.Zotero_Tabs.markAsLoaded(tabID);
 		await library.waitForDataLoad('item');
 
 		let item = Zotero.Items.get(itemID);
@@ -1747,7 +1761,6 @@ class Reader {
 		this._loadSidebarState();
 		this.triggerAnnotationsImportCheck(itemID);
 		let reader;
-		let win = Zotero.getMainWindow();
 		// If duplicating is not allowed, and no reader instance is loaded for itemID,
 		// try to find an unloaded tab and select it. Zotero.Reader.open will then be called again
 		if (!allowDuplicate && !this._readers.find(r => r.itemID === itemID)) {

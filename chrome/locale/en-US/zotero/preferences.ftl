@@ -24,6 +24,8 @@ preferences-reader-open-snapshots-using = Open snapshots using
 preferences-reader-open-in-new-window =
     .label = Open files in new windows instead of tabs
 preferences-reader-ebook-font = Ebook font:
+preferences-reader-ebook-hyphenate =
+    .label = Enable automatic hyphenation
 
 preferences-color-scheme = Color Scheme:
 preferences-color-scheme-auto =
@@ -43,7 +45,7 @@ preferences-locate-resolver = Resolver:
 preferences-locate-base-url = Base URL:
 
 preferences-quickCopy-minus =
-    .aria-label = { general-minus }
+    .aria-label = { general-remove }
     .label = { $label }
 preferences-quickCopy-plus =
     .aria-label = { general-add }

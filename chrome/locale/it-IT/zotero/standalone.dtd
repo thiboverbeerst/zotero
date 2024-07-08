@@ -43,6 +43,7 @@
 <!ENTITY bidiSwitchTextDirectionItem.commandkey "X">
 
 <!ENTITY goMenu.label "Vai">
+<!ENTITY goMenu.accesskey "G">
 
 <!ENTITY viewMenu.label "Aspetto">
 <!ENTITY viewMenu.accesskey "V">
@@ -55,8 +56,8 @@
 <!ENTITY recursiveCollections.label "Mostra gli oggetti delle sottocollezioni">
 <!ENTITY fontSize.label "Dimensione del font">
 <!ENTITY noteFontSize.label "Dimensione del font nelle note">
-<!ENTITY columns.label "Columns">
-<!ENTITY sortBy.label "Sort By">
+<!ENTITY columns.label "Colonne">
+<!ENTITY sortBy.label "Ordina">
 
 <!ENTITY toolsMenu.label "Strumenti">
 <!ENTITY toolsMenu.accesskey "T">
